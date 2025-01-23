@@ -90,28 +90,22 @@ npm run dev
 
 #### AppStreamer
 
-The most important part of this sample is the [./src/components/AppStreamer.vue](./src/components/AppStreamer.vue) file and its
-use of the `AppStreamer` class imported from the `omniverse-webrtc-streaming-library`.
-The `AppStreamer` is used for any implementation and `AppStreamer.vue` is a reference implementation
-for initializing the stream and providing bi-directional messaging between the front end client
-and the Kit application.
+这个示例中最重要的部分是 [./src/components/AppStreamer.vue](./src/components/AppStreamer.vue) 文件，该文件基于 `omniverse-webrtc-streaming-library` 库，并使用了 `AppStreamer` 类。`AppStreamer.vue` 提供了一个用于初始化流并实现 Web 客户端与 Kit 应用程序之间双向消息传递的参考实现。
 
-### Initialize the Stream
+#### 初始化流
 
-The `AppStreamer`’s `connect()` function initializes the streaming and messaging. Here you provide a
-`streamConfig` object with configuration settings and a set of functions to handle messages.
+`AppStreamer`的`connect()`函数用于初始化流和消息传递。你需要提供一个包含配置设置的`streamConfig`对象以及一组用于处理消息的函数。
 
-### Custom Messages with AppStreamer
+#### 自定义消息
 
-There are two critical things to recognize when working with AppStreamer and custom messages:
+在使用 AppStreamer 和自定义消息时，需要注意以下两个关键点：
 
-- `AppStreamer.sendMessage()` lets you send a custom message.
-- The stream config data that's passed to the `AppStreamer` (`RagnarokConfig` or `GFNConfig`) lets you register a handler for incoming messages via `onCustomEvent` (view code example [here](./src/components/AppStreamer.vue#L65)).
+- `AppStreamer.sendMessage()` 用于发送自定义消息。
+- 传递给 `AppStreamer` 的流配置数据（`RagnarokConfig` 或 `GFNConfig`）允许你通过 `onCustomEvent` 注册一个处理传入消息的处理器 ([查看代码示例](./src/components/AppStreamer.vue#L65)).
 
-#### Message Format
+#### 消息格式
 
-All custom messages exchanged between the front end client and the streamed Omniverse Kit application follows the same format:
-an object with properties `event_type` and `payload` that is JSON stringified prior to being sent off.
+`AppStreamer` 与 Web客户端之间的消息格式为包含 `event_type`和`playload`的 JSON 对象字符串。 消息的结构如下：
 
 ```typescript
 {
@@ -122,15 +116,13 @@ an object with properties `event_type` and `payload` that is JSON stringified pr
 }
 ```
 
-On the receiving end, the Omniverse Kit application will need an Extension that handles `myEvent` and it's `payload`. The Kit
-application sends similar messages for this client to handle. Below we explore how messages are used in this solution for
-opening a USD stage,
+在接收端，Kit应用程序需要一个扩展来处理`myEvent`和它的`payload`。Kit应用程序发送类似的消息给客户端来处理。下面我们探索如何在这个解决方案中使用消息打开USD场景。
 
-#### Send a Custom Message
+#### 发送自定义消息
 
-Messages sent by `AppStreamer` are strings. To make a message usable by your custom Kit Extension based on
-`omni.kit.livestream.messaging` usage you’ll need to comply with the message format stated above.
-A practical and easy to read approach to do this is to first create an object:
+`AppStreamer` 发送的消息为JSON字符串，为了让自定义的Kit扩展基于`omni.kit.livestream.messaging`的使用，需要遵循上述消息格式。
+
+示例：
 
 ```typescript
 const message = {
@@ -141,18 +133,17 @@ const message = {
 }
 ```
 
-Then use json to stringify the message object and ask AppStreamer to send it:
+然后将消息对象序列化为JSON字符串，并使用`AppStreamer.sendMessage()`发送消息。
 
 ```typescript
 AppStreamer.sendMessage(JSON.stringify(message))
 ```
 
-This sample's [DashboardView.vue](src/views/DashboardView.vue#L55) shows many examples of sending messages.
+此示例的[DashboardView.vue](src/views/DashboardView.vue#L55)文件提供了发送消息的示例。
 
-#### Receive a Custom Message
+#### 接收自定义消息
 
-The function registered for custom events with `AppStreamer.connect()` should expect the same message object
-structure used to send messages.
+使用`AppStreamer.connect()`注册自定义事件处理器时，需要提供一个处理传入消息的函数。该函数需要接收一个包含`event_type`和`payload`的消息对象。
 
 ```typescript
 const handleCustomEvent (event: any): void {
@@ -166,7 +157,7 @@ const handleCustomEvent (event: any): void {
 }
 ```
 
-This sample's [DashboardView.vue](src/views/DashboardView.vue#L77) has a `handleCustomEvent` that shows many examples of handling messages.
+此示例的[DashboardView.vue](src/views/DashboardView.vue#L77)文件提供了处理消息的示例。
 
 ## 许可证
 
