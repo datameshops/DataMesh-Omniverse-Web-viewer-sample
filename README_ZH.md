@@ -6,7 +6,7 @@
 
 此示例是一个基于 DataMesh 数字孪生平台 与 NVIDIA Omniverse 的 Web Viewer 数据可视化应用。该示例演示了在Web客户端如何使用 DataMesh 数字孪生平台与 NVIDIA Omniverse 渲染数字孪生场景并进行数据可视化。
 
-此示例基于VueJS框架(https://vuejs.org/)构建的Vue应用程序。
+此示例基于VueJS框架([https://vuejs.org/](https://vuejs.org/))构建的Vue应用程序。
 
 ## 前置条件
 
