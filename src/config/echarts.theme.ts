@@ -1,5 +1,5 @@
 export default {
-  color: ['#2F82FF', '#22c3aa', '#7bd9a5'],
+  color: ['rgba(129, 234, 255, 0.6)'],
   backgroundColor: 'rgba(0,0,0,0)',
   textStyle: {},
   title: {
@@ -67,8 +67,8 @@ export default {
         width: 1,
       },
     },
-    borderColor: '#86A8FF',
-    backgroundColor: '#123965',
+    borderColor: '#rgba(255,255,255,0.8)',
+    backgroundColor: 'rgba(255,255,255,0.3)',
     textStyle: {
       color: '#fff',
     },

@@ -4,28 +4,28 @@
   <img src="public/sample.jpg" width=100% />
 </p>
 
-此示例是一个基于 DataMesh 数字孪生平台 与 NVIDIA Omniverse 的 Web Viewer 数据可视化应用。该示例演示了在Web客户端如何使用 DataMesh 数字孪生平台与 NVIDIA Omniverse 渲染数字孪生场景并进行数据可视化。
+This sample is a Web Viewer data visualization application based on the DataMesh digital twin platform and NVIDIA Omniverse. It demonstrates how to use the DataMesh digital twin platform with NVIDIA Omniverse to render digital twin scenes and visualize data in a web client.
 
-此示例基于VueJS框架([https://vuejs.org/](https://vuejs.org/))构建的Vue应用程序。
+This sample is built as a Vue application using the VueJS framework ([https://vuejs.org/](https://vuejs.org/)).
 
-## 前置条件
+## Prerequisites
 
-- 安装 Node.js 和 npm。
-- Chromium 浏览器。
-- 安装[Nucleus 资源引擎服务](https://81biz.sharepoint.com/:o:/s/DataMeshDev/EjQ66QdSmNxBn8YBzOoXazABpth5pxqqnSgh0-gPSvpIMw?e=kso5oZ)
-- 安装 [USD Viewer推流服务](https://81biz.sharepoint.com/:o:/s/DataMeshDev/EjQ66QdSmNxBn8YBzOoXazABpth5pxqqnSgh0-gPSvpIMw?e=kso5oZ)
+- Install Node.js and npm.
+- Chromium browser.
+- Install the [Omniverse Nucleus](https://81biz.sharepoint.com/:o:/s/DataMeshDev/EjQ66QdSmNxBn8YBzOoXazABpth5pxqqnSgh0-gPSvpIMw?e=kso5oZ).
+- Install the [USD Viewer Streaming Application](https://81biz.sharepoint.com/:o:/s/DataMeshDev/EjQ66QdSmNxBn8YBzOoXazABpth5pxqqnSgh0-gPSvpIMw?e=kso5oZ).
 
-## 服务配置
+## Service Configuration
 
-本示例程序在运行前需进行以下的配置：
+Before running this sample application, you need to configure the following:
 
-1. 打开 [src/config/dashboard.config.ts](src/config//dashboard.config.ts) 配置文件。
+1. Open the [src/config/dashboard.config.ts](src/config//dashboard.config.ts) configuration file.
 
-2. 找到 `DASHBOARD_CONFIG`的`streamUsd` 变量，并将其值设置为基于[USD Viewer服务](https://81biz.sharepoint.com/:o:/s/DataMeshDev/EjQ66QdSmNxBn8YBzOoXazABpth5pxqqnSgh0-gPSvpIMw?e=kso5oZ)的USD文件地址。
+2. Find the `streamUsd` variable in `DASHBOARD_CONFIG` and set its value to the USD file address based on the [USD Viewer Streaming Application](https://81biz.sharepoint.com/:o:/s/DataMeshDev/EjQ66QdSmNxBn8YBzOoXazABpth5pxqqnSgh0-gPSvpIMw?e=kso5oZ).
 
-3. 找到 `DASHBOARD_CONFIG`的`streamServer` 变量，并将其值设置为基于[USD Viewer服务](https://81biz.sharepoint.com/:o:/s/DataMeshDev/EjQ66QdSmNxBn8YBzOoXazABpth5pxqqnSgh0-gPSvpIMw?e=kso5oZ)的服务地址。
+3. Find the `streamServer` variable in `DASHBOARD_CONFIG` and set its value to the service address based on the [USD Viewer Streaming Application](https://81biz.sharepoint.com/:o:/s/DataMeshDev/EjQ66QdSmNxBn8YBzOoXazABpth5pxqqnSgh0-gPSvpIMw?e=kso5oZ).
 
-4. 找到`PANEL_CONFIG`的`sceneId`变量，并将其值设置为基于 DataMesh 数字孪生平台的场景 ID（参考[USD Viewer服务](https://81biz.sharepoint.com/:o:/s/DataMeshDev/EjQ66QdSmNxBn8YBzOoXazABpth5pxqqnSgh0-gPSvpIMw?e=kso5oZ)）。
+4. Find the `sceneId` variable in `PANEL_CONFIG` and set its value to the scene ID based on the DataMesh digital twin platform (refer to the [USD Viewer Streaming Application](https://81biz.sharepoint.com/:o:/s/DataMeshDev/EjQ66QdSmNxBn8YBzOoXazABpth5pxqqnSgh0-gPSvpIMw?e=kso5oZ)).
 
 ```javascript
 export const DASHBOARD_CONFIG = {
@@ -35,77 +35,77 @@ export const DASHBOARD_CONFIG = {
 }
 ```
 
-## 运行程序
+## Running the Application
 
-本章节介绍如何在本地使用开发模式运行本示例程序。
+This section explains how to run this sample application locally in development mode.
 
-1. 确保满足[前置条件](#前置条件)
+1. Ensure that you meet the [Prerequisites](#Prerequisites)
 
-2. 启动基于DataMesh数字孪生创建的[USD Viewer服务](https://81biz.sharepoint.com/:o:/s/DataMeshDev/EjQ66QdSmNxBn8YBzOoXazABpth5pxqqnSgh0-gPSvpIMw?e=kso5oZ)的应用程序。
+2. Start the USD Viewer Streaming Application created based on the DataMesh digital twin platform.
 
-3. 克隆本示例至本地:
-
-```
-git clone https:xxx
-```
-
-4. 进到本示例程序的根目录
+3. Clone this sample to your local machine:
 
 ```
-cd web-viewer-sample
+git clone https://github.com/datameshops/DataMesh-Omniverse-Web-viewer-sample.git
 ```
 
-5. 安装npm依赖
+4. Navigate to the root directory of this sample application:
+
+```
+cd DataMesh-Omniverse-Web-viewer-sample
+```
+
+5. Install npm dependencies:
 
 ```bash
 npm install
 ```
 
-6. 然后，运行以下命令启动程序：
+6. Run the following command to start the application:
 
 ```bash
 npm run dev
 ```
 
-打开浏览器，访问 http://localhost:8080/
+Open a browser and visit http://localhost:8080/
 
-## Web客户端开发
+## Web Client Development
 
-此示例基于VueJS框架构建，并使用了 NVIDIA Omniverse 作为数据可视化组件，数字孪生场景数据使用MQTT协议与DataMesh DFS服务进行传输，接收到数据后通过Echarts可视化图表呈现来自DataMesh数字孪生平台的场景数据。
+This sample is built using the VueJS framework and employs NVIDIA Omniverse as the data visualization component. The digital twin scene data is transmitted via the MQTT protocol with DataMesh DFS. Once the data is received, it is visualized and displayed using Echarts.
 
-### 组件库
+### Component Library
 
-本示例程序中，主要使用了以下组件：
+The following components are primarily used in this sample application:
 
-- [NVIDIA Omniverse](https://github.com/NVIDIA-Omniverse/web-viewer-sample)：用于数据可视化的组件。
-- [MQTT.js](https://github.com/mqttjs/MQTT.js)：用于MQTT协议的JavaScript客户端。
-- [Echarts](https://echarts.apache.org/zh/index.html)：用于可视化图表的组件。
+- [NVIDIA Omniverse](https://github.com/NVIDIA-Omniverse/web-viewer-sample): A component for data visualization.
+- [MQTT.js](https://github.com/mqttjs/MQTT.js): A JavaScript client for the MQTT protocol.
+- [Echarts](https://echarts.apache.org/zh/index.html): A component for visualizing charts.
 
 ### NVIDIA Omniverse
 
-要将 Omniverse Viewer 嵌入到Web客户端，您需要将 `omniverse-webrtc-streaming-library`作为依赖项加入到项目中：
+To embed Omniverse Viewer into the web client, you need to add `omniverse-webrtc-streaming-library` as a dependency to the project:
 
-- 请参考 [.npmrc](.npmrc) 的 `@nvidia:registry` 配置。
-- 请参考 [package.json](package.json) 的 `dependencies` 部分
+- Refer to the `@nvidia:registry` configuration in [.npmrc](.npmrc).
+- Refer to the `dependencies` section in [package.json](package.json).
 
 #### AppStreamer
 
-这个示例中最重要的部分是 [./src/components/AppStreamer.vue](./src/components/AppStreamer.vue) 文件，该文件基于 `omniverse-webrtc-streaming-library` 库，并使用了 `AppStreamer` 类。`AppStreamer.vue` 提供了一个用于初始化流并实现 Web 客户端与 Kit 应用程序之间双向消息传递的参考实现。
+The most important part of this example is the [./src/components/AppStreamer.vue](./src/components/AppStreamer.vue) file, which is based on the `omniverse-webrtc-streaming-library` and uses the `AppStreamer` class. `AppStreamer.vue` provides a reference implementation for initializing the stream and enabling bi-directional messaging between the web client and the Kit application.
 
-#### 初始化流
+#### Initialize the Stream
 
-`AppStreamer`的`connect()`函数用于初始化流和消息传递。你需要提供一个包含配置设置的`streamConfig`对象以及一组用于处理消息的函数。
+The `connect()` function of `AppStreamer` is used to initialize the stream and messaging. You need to provide a `streamConfig`object containing configuration settings, along with a set of functions to handle the messages.
 
-#### 自定义消息
+#### Custom Messages
 
-在使用 AppStreamer 和自定义消息时，需要注意以下两个关键点：
+When using `AppStreamer` and custom messages, there are two key points to note:
 
-- `AppStreamer.sendMessage()` 用于发送自定义消息。
-- 传递给 `AppStreamer` 的流配置数据（`RagnarokConfig` 或 `GFNConfig`）允许你通过 `onCustomEvent` 注册一个处理传入消息的处理器 ([查看代码示例](./src/components/AppStreamer.vue#L65)).
+- `AppStreamer.sendMessage()` is used to send custom messages.
+- The stream configuration data passed to `AppStreamer` (`RagnarokConfig` or `GFNConfig`) allows you to register a handler for incoming messages via `onCustomEvent` ([view code example](./src/components/AppStreamer.vue#L65)).
 
-#### 消息格式
+#### Message Format
 
-`AppStreamer` 与 Web客户端之间的消息格式为包含 `event_type`和`playload`的 JSON 对象字符串。 消息的结构如下：
+The message format between `AppStreamer` and the web client is a JSON object string containing `event_type` and `playload`. The structure of the message is as follows:
 
 ```typescript
 {
@@ -116,13 +116,13 @@ npm run dev
 }
 ```
 
-在接收端，Kit应用程序需要一个扩展来处理`myEvent`和它的`payload`。Kit应用程序发送类似的消息给客户端来处理。下面我们探索如何在这个解决方案中使用消息打开USD场景。
+On the receiving end, the Kit application requires an extension to handle `myEvent` and its `payload`。The Kit application sends similar messages to the client for processing. Below, we explore how messages are used to open a USD scene in this solution.
 
-#### 发送自定义消息
+#### Sending Custom Messages
 
-`AppStreamer` 发送的消息为JSON字符串，为了让自定义的Kit扩展基于`omni.kit.livestream.messaging`的使用，需要遵循上述消息格式。
+Messages sent by `AppStreamer` are JSON strings. To ensure that your custom Kit extension based on `omni.kit.livestream.messaging` can process these messages, you need to follow the message format mentioned above.
 
-示例：
+Example:
 
 ```typescript
 const message = {
@@ -133,17 +133,17 @@ const message = {
 }
 ```
 
-然后将消息对象序列化为JSON字符串，并使用`AppStreamer.sendMessage()`发送消息。
+Then, serialize the message object into a JSON string and send it using `AppStreamer.sendMessage()`.
 
 ```typescript
 AppStreamer.sendMessage(JSON.stringify(message))
 ```
 
-此示例的[DashboardView.vue](src/views/DashboardView.vue#L55)文件提供了发送消息的示例。
+The [DashboardView.vue](src/views/DashboardView.vue#L55) file in this sample provides an example of sending messages.
 
-#### 接收自定义消息
+#### Receiving Custom Messages
 
-使用`AppStreamer.connect()`注册自定义事件处理器时，需要提供一个处理传入消息的函数。该函数需要接收一个包含`event_type`和`payload`的消息对象。
+When using `AppStreamer.connect()` to register a custom event handler, you need to provide a function to process incoming messages. This function should receive a message object that contains both `event_type` and `payload`.
 
 ```typescript
 const handleCustomEvent (event: any): void {
@@ -157,8 +157,8 @@ const handleCustomEvent (event: any): void {
 }
 ```
 
-此示例的[DashboardView.vue](src/views/DashboardView.vue#L77)文件提供了处理消息的示例。
+The [DashboardView.vue](src/views/DashboardView.vue#L77) file in this sample provides an example of handling messages.
 
-## 许可证
+## License
 
-此项目将下载并安装其他第三方开源软件项目。在使用这些开源项目之前，请查看其许可条款。
+This project downloads and installs other third-party open-source software. Please review their license terms before using them.

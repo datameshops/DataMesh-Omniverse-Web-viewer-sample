@@ -155,13 +155,13 @@ interface RobotPLCTy {
 
 // Battery status mapping
 export const CHARGE_STATUS = {
-  CHARGE_OK: 'CHARGE OK',
-  CHARGE_LOW: 'LOW CHARGE',
-  CHARGE_NO: 'NO CHARGE',
+  CHARGE_OK: 'Charge OK',
+  CHARGE_LOW: 'Low Charge',
+  CHARGE_NO: 'No Charge',
 }
 
 // Equipment status mapping
-export const EQUIPMENT_STATUS = { 0: '设备活跃', 1: '设备停止' }
+export const EQUIPMENT_STATUS = { 0: 'Active', 1: 'Stopped' }
 
 // Robot status mapping
-export const ROBOT_STATUS = { 0: '正常运行', 1: '停止运行' }
+export const ROBOT_STATUS = { 0: 'Running', 1: 'Stopped' }

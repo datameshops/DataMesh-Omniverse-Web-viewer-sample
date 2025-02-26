@@ -2,108 +2,118 @@
   <!-- Left dashboard panel -->
   <div class="dashboard-card left-panel" v-loading="basePanelLoading">
     <!-- Hourly production -->
-    <div class="data-panel-title">每小时产量</div>
-    <div class="dashboard-card-content">
-      <v-chart :option="barOptions" autoresize theme="liauto-theme" style="height: 140px" />
+    <div class="dashboard-card-item">
+      <div class="dashboard-title">Hourly Output</div>
+      <div class="dashboard-card-content">
+        <v-chart :option="barOptions" autoresize theme="datamesh-theme" style="height: 200px" />
+      </div>
     </div>
     <!-- BPM -->
-    <div class="data-panel-title">节拍</div>
-    <div class="dashboard-card-content bpm-content">
-      <div class="bpm-title">
-        平均节拍:
-        <span>{{ basePanelData.CycleTime.averageCycleTime || 0 }}s</span>
+    <div class="dashboard-card-item">
+      <div class="dashboard-title">Cycle Time</div>
+      <div class="dashboard-card-content bpm-content">
+        <div class="bpm-title">
+          Average Cycle Time:
+          <span>{{ basePanelData.CycleTime.averageCycleTime || 0 }}s</span>
+        </div>
+        <el-table
+          :data="basePanelData.stationInfo.workerInfo"
+          size="small"
+          class="margin-top-8"
+          stripe
+        >
+          <el-table-column prop="stationName" label="Workstation" align="center" />
+          <el-table-column prop="currentCycleTime" label="Current Cycle Time" align="center">
+            <template #default="scope"> {{ scope.row.currentCycleTime || 0 }}s </template>
+          </el-table-column>
+          <el-table-column prop="preCycleTime" label="Previous Cycle Time" align="center">
+            <template #default="scope"> {{ scope.row.preCycleTime || 0 }}s </template>
+          </el-table-column>
+        </el-table>
       </div>
-      <el-table
-        :data="basePanelData.stationInfo.workerInfo"
-        size="small"
-        class="margin-top-8"
-        stripe
-      >
-        <el-table-column prop="stationName" label="工位" align="center" />
-        <el-table-column prop="currentCycleTime" label="当前节拍" align="center">
-          <template #default="scope"> {{ scope.row.currentCycleTime || 0 }}s </template>
-        </el-table-column>
-        <el-table-column prop="preCycleTime" label="前车节拍" align="center">
-          <template #default="scope"> {{ scope.row.preCycleTime || 0 }}s </template>
-        </el-table-column>
-      </el-table>
     </div>
     <!-- Hourly average production BPM -->
-    <div class="data-panel-title">每小时平均生产节拍</div>
-    <div class="dashboard-card-content">
-      <v-chart :option="lineOptions" autoresize theme="liauto-theme" style="height: 140px" />
+    <div class="dashboard-card-item">
+      <div class="dashboard-title">Hourly Cycle Time</div>
+      <div class="dashboard-card-content">
+        <v-chart :option="lineOptions" autoresize theme="datamesh-theme" style="height: 180px" />
+      </div>
     </div>
   </div>
 
   <!-- Right robot panel -->
   <div class="dashboard-card right-panel" v-show="currentRobotId !== ''" v-loading="robotLoading">
-    <div class="robot-header">
-      机械臂数据详情
-      <div class="spacer"></div>
-      <div class="close-btn" @click="onCloseRobotPanel"></div>
-    </div>
     <!-- Robot data details -->
-    <el-descriptions v-if="robotData.Info" :column="2">
-      <el-descriptions-item label="机器人名称">
-        {{ robotData.Info?.name }}
-      </el-descriptions-item>
-      <el-descriptions-item label="设备状态" v-if="robotData.Info?.equipmentStatus !== undefined">
-        {{ EQUIPMENT_STATUS[robotData.Info?.equipmentStatus] }}
-      </el-descriptions-item>
-      <el-descriptions-item label="机器人序列号">
-        {{ robotData.Info?.serialNumber }}
-      </el-descriptions-item>
-    </el-descriptions>
-    <!-- Telemetry information -->
-    <div class="robot-title">遥测信息</div>
-    <el-descriptions :column="2">
-      <el-descriptions-item label="工作模式">
-        {{ robotData.Data?.workingMode }}
-      </el-descriptions-item>
-      <el-descriptions-item label="机器人状态" v-if="robotData.Data?.robotStatus !== undefined">
-        {{ ROBOT_STATUS[robotData.Data?.robotStatus] }}
-      </el-descriptions-item>
-      <el-descriptions-item label="当前激活程序名称">
-        {{ robotData.Data?.robotName }}
-      </el-descriptions-item>
-      <el-descriptions-item label="程序倍率">
-        {{ robotData.Data?.robotRate }}%
-      </el-descriptions-item>
-    </el-descriptions>
-    <el-descriptions :column="1">
-      <el-descriptions-item label="各轴实时温度"> </el-descriptions-item>
-      <el-descriptions-item label="各轴实时电流"> </el-descriptions-item>
-    </el-descriptions>
-    <div class="robot-echart">
-      <div class="robot-echart-content">
-        <el-descriptions :column="1">
-          <el-descriptions-item label="各轴实时温度"> </el-descriptions-item>
-        </el-descriptions>
-        <v-chart :option="TempBarOptions" autoresize theme="liauto-theme" style="height: 140px" />
+    <div class="dashboard-card-item">
+      <div class="robot-header">
+        <div class="spacer"></div>
+        <div class="close-btn" @click="onCloseRobotPanel"></div>
       </div>
-      <div class="robot-echart-content">
-        <el-descriptions :column="1">
-          <el-descriptions-item label="各轴实时电流"> </el-descriptions-item>
+      <div class="dashboard-title">Robot Data</div>
+      <div class="dashboard-card-content">
+        <el-descriptions v-if="robotData.Info" :column="1">
+          <el-descriptions-item label="Robot Name">
+            {{ robotData.Info?.name }}
+          </el-descriptions-item>
+          <el-descriptions-item label="Equipment Status" v-if="robotData.Info?.equipmentStatus !== undefined">
+            <span class="status">{{ EQUIPMENT_STATUS[robotData.Info?.equipmentStatus] }}</span>
+          </el-descriptions-item>
+          <el-descriptions-item label="Robot Serial Number">
+            {{ robotData.Info?.serialNumber }}
+          </el-descriptions-item>
         </el-descriptions>
-        <v-chart
-          :option="currentBarOptions"
-          autoresize
-          theme="liauto-theme"
-          style="height: 140px"
-        />
+      </div>
+    </div>
+    <!-- Telemetry information -->
+    <div class="dashboard-card-item">
+      <div class="dashboard-title">Telemetry Info</div>
+      <div class="dashboard-card-content">
+        <el-descriptions :column="1">
+          <el-descriptions-item label="Operating Mode">
+            {{ robotData.Data?.workingMode }}
+          </el-descriptions-item>
+          <el-descriptions-item label="Robot Status" v-if="robotData.Data?.robotStatus !== undefined">
+            <span class="status">{{ ROBOT_STATUS[robotData.Data?.robotStatus] }}</span>
+          </el-descriptions-item>
+          <el-descriptions-item label="Current Active Program">
+            {{ robotData.Data?.robotName }}
+          </el-descriptions-item>
+          <el-descriptions-item label="Operating Speed">
+            {{ robotData.Data?.robotRate }}%
+          </el-descriptions-item>
+        </el-descriptions>
+        <div class="robot-echart">
+          <div class="robot-echart-content">
+            <div class="robot-echart-title">Real-Time Temperature</div>
+            <v-chart :option="TempBarOptions" autoresize theme="temperature-theme" style="height: 221px" />
+          </div>
+          <div class="robot-echart-content">
+            <div class="robot-echart-title">Real-Time Current</div>
+            <v-chart
+              :option="currentBarOptions"
+              autoresize
+              theme="datamesh-theme"
+              style="height: 221px"
+            />
+          </div>
+      </div>
       </div>
     </div>
     <!-- Control cabinet -->
-    <div class="robot-title">控制柜</div>
-    <el-descriptions :column="2">
-      <el-descriptions-item label="PC主板温度"> {{ robotData.PLC?.PCTemp }}℃ </el-descriptions-item>
-      <el-descriptions-item label="电池状态" v-if="robotData.PLC?.chargeStatus">
-        {{ CHARGE_STATUS[robotData.PLC.chargeStatus] }}
-      </el-descriptions-item>
-      <el-descriptions-item label="PC CPU使用率">
-        {{ robotData.PLC?.CPUUtility?.toFixed(2) }}%
-      </el-descriptions-item>
-    </el-descriptions>
+    <div class="dashboard-card-item">
+      <div class="dashboard-title">Control Cabinet</div>
+      <div class="dashboard-card-content">
+        <el-descriptions :column="1">
+          <el-descriptions-item label="Motherboard Temperature"> {{ robotData.PLC?.PCTemp }}℃ </el-descriptions-item>
+          <el-descriptions-item label="Battery Status" v-if="robotData.PLC?.chargeStatus">
+            {{ CHARGE_STATUS[robotData.PLC.chargeStatus] }}
+          </el-descriptions-item>
+          <el-descriptions-item label="CPU Usage">
+            {{ robotData.PLC?.CPUUtility?.toFixed(2) }}%
+          </el-descriptions-item>
+        </el-descriptions>
+      </div>
+    </div>
   </div>
 </template>
 <script lang="ts" setup>
@@ -122,8 +132,10 @@ import { EQUIPMENT_STATUS } from '@/types/panel'
 // import { ElDescriptions, ElDescriptionsItem, ElTable, ElTableColumn } from 'element-plus'
 
 // Register echarts components
+const temperatureTheme = theme;
 use([CanvasRenderer, BarChart, LineChart, GridComponent, TooltipComponent])
-registerTheme('liauto-theme', theme)
+registerTheme('datamesh-theme', theme)
+registerTheme('temperature-theme', {...temperatureTheme, color: ['rgba(4, 209, 255, 0.8)']})
 
 const {
   basePanelData,
@@ -168,8 +180,8 @@ const barOptions = computed(() => {
     },
     grid: {
       top: '10%',
-      bottom: '20%',
-      left: '12%',
+      bottom: '15%',
+      left: '10%',
       right: '0',
     },
     xAxis: {
@@ -202,10 +214,13 @@ const lineOptions = computed(() => {
   return {
     tooltip: {
       trigger: 'axis',
+      formatter: function (params: any) {
+        return `<strong>${params[0].name }</strong><br/> ${params[0].value}min`
+      },
     },
     grid: {
       top: '10%',
-      bottom: '20%',
+      bottom: '15%',
       left: '10%',
       right: '0',
     },
@@ -231,8 +246,8 @@ const lineOptions = computed(() => {
             x2: 0,
             y2: 1,
             colorStops: [
-              { offset: 0, color: 'rgba(74, 130, 234, 0.8)' }, // Gradient start color
-              { offset: 1, color: 'rgba(74, 130, 234, 0.0)' }, // Gradient end color
+              { offset: 0, color: 'rgba(4, 209, 255, 0.6)' }, // Gradient start color
+              { offset: 1, color: 'rgba(4, 209, 255, 0)' }, // Gradient end color
             ],
           },
         },
@@ -257,6 +272,9 @@ const TempBarOptions = computed(() => {
   return {
     tooltip: {
       trigger: 'axis',
+      formatter: function (params: any) {
+        return `<strong>${params[0].name }</strong><br/> ${params[0].value}°C`
+      },
     },
     grid: {
       top: '10px',
@@ -291,6 +309,9 @@ const currentBarOptions = computed(() => {
   return {
     tooltip: {
       trigger: 'axis',
+      formatter: function (params: any) {
+        return `<strong>${params[0].name }</strong><br/> ${params[0].value}A`
+      },
     },
     grid: {
       top: '10px',
@@ -319,49 +340,60 @@ const currentBarOptions = computed(() => {
   top: 50%;
   transform: translateY(-50%);
 
-  width: 280px;
-  background-color: rgba(4, 18, 48, 0.9);
-  border: 1px #2194ff solid;
-  padding: 10px;
-
   // Left panel
   &.left-panel {
-    left: 40px;
+    left: 44px;
   }
-  .data-panel-title {
+
+  .dashboard-card-item {
+    width: 326px;
+    background-color: rgba(8, 59, 88, 0.55);
+    padding: 10px;
+    border-radius: 6px;
+    margin-bottom: 6px;
+  }
+
+  .dashboard-title {
+    width: 291px;
+    height: 37px;
     font-size: 1.5rem;
-    line-height: 28px;
-    height: 38px;
-    padding: 10px 20px 0;
+    line-height: 26px;
+    padding-left: 25px;
     font-weight: bold;
     color: #ffffff;
     text-shadow: 0 1px 1px #001845;
 
-    background: url('@/assets/dashboard/card-header-bg.png') no-repeat;
-    background-position: center bottom;
+    background: url('@/assets/dashboard/card-header-01-bg.png') no-repeat;
+    background-size: 292px 21.5px;
+    background-position: left bottom;
   }
   .dashboard-card-content {
     padding: 0 10px;
+
+    .status {
+      color: #00F6FF;
+      font-weight: 600;
+    }
   }
 
   .bpm-content {
     padding: 0 15px 15px;
     .bpm-title {
       line-height: 40px;
-      color: #ffffff;
+      color: #DFDFDF;
       font-size: 16px;
       padding-left: 20px;
       background: url('@/assets/dashboard/item-bg.png') no-repeat left center;
       background-size: 10px 10px;
       span {
-        color: #ffae3f;
+        color: #ffffff;
         font-weight: bold;
       }
     }
     :deep(.el-table) {
       --el-table-bg-color: none;
       --el-table-tr-bg-color: none;
-      --el-table-row-hover-bg-color: rgba(255, 255, 255, 0.1);
+      --el-table-row-hover-bg-color: rgba(0, 217, 255, 0.1);
       --el-fill-color-lighter: var(--el-table-row-hover-bg-color);
       --el-table-header-bg-color: none;
       --el-table-border-color: none;
@@ -371,9 +403,9 @@ const currentBarOptions = computed(() => {
 
       $table-border-image: linear-gradient(
         to right,
-        rgba(255, 255, 255, 0),
-        #ffffff,
-        rgba(255, 255, 255, 0)
+        rgba(0, 217, 255, 0),
+        #00D9FF,
+        rgba(0, 217, 255, 0)
       );
 
       // border
@@ -395,7 +427,11 @@ const currentBarOptions = computed(() => {
           bottom: 0;
         }
         tr {
-          background-color: rgba(114, 114, 114, 0.2);
+          background-color: rgba(0, 217, 255, 0.2);
+          .cell {
+            color: #ffffff;
+            line-height: 18px;
+          }
         }
       }
       td.el-table__cell {
@@ -444,41 +480,29 @@ const currentBarOptions = computed(() => {
   // Right robot panel
   &.right-panel {
     right: 40px;
-    width: 460px;
-    padding: 16px 16px 24px;
+    .dashboard-card-item{
+      width: 436px;
+      padding: 18px 16px;
+    }
+
+    .dashboard-title {
+      width: 403px;
+      background: url('@/assets/dashboard/card-header-02-bg.png') no-repeat;
+      background-size: 403px 21.5px;
+      background-position: left bottom;
+    }
+    .dashboard-card-content {
+      padding-top: 20px;
+    }
   }
   .robot-header {
     display: flex;
-    align-items: center;
-    font-size: 1.25rem;
-    line-height: 32px;
-    font-weight: bold;
-    color: #ffffff;
     .close-btn {
-      width: 24px;
-      height: 24px;
+      width: 17px;
+      height: 17px;
       background: url('@/assets/dashboard/close-btn.png') center center no-repeat;
-      background-size: 24px 24px;
+      background-size: 17px 17px;
       cursor: pointer;
-    }
-  }
-
-  .robot-title {
-    margin-top: 10px;
-    margin-bottom: 2px;
-    font-size: 1.25rem;
-    line-height: 32px;
-    font-weight: bold;
-    color: #ffffff;
-    position: relative;
-    &::after {
-      content: '';
-      width: 100%;
-      height: 2px;
-      background-image: linear-gradient(to right, rgba(25, 159, 255, 0.5), rgba(25, 159, 255, 0));
-      position: absolute;
-      left: 0;
-      bottom: 0;
     }
   }
 
@@ -486,6 +510,7 @@ const currentBarOptions = computed(() => {
     --el-fill-color-blank: none;
     .el-descriptions__cell {
       padding-bottom: 0;
+      line-height: 28px;
     }
     .el-descriptions__label,
     .el-descriptions__content {
@@ -497,7 +522,7 @@ const currentBarOptions = computed(() => {
       height: 24px !important;
       padding-left: 18px;
       background: url('@/assets/dashboard/item-bg.png') no-repeat left center;
-      background-size: 10px 10px;
+      background-size: 9px 9px;
     }
     .el-descriptions__content {
       font-weight: bold;
@@ -507,10 +532,24 @@ const currentBarOptions = computed(() => {
 
   .robot-echart {
     display: flex;
+    margin-top: 20px;
     .robot-echart-content {
+      .robot-echart-title {
+        width: 100%;
+        height: 30px;
+        background: url('@/assets/dashboard/card-header-03-bg.png') no-repeat;
+        background-position: left bottom;
+        background-size: 240px 26px;
+
+        color: #ffffff;
+        padding-left: 24px;
+        font-weight: bold;
+        font-size: 14px;
+        line-height: 20px;
+      }
       width: 100%;
       &:first-child {
-        margin-right: 20px;
+        margin-right: 10px;
       }
     }
   }

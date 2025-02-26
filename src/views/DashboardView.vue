@@ -10,7 +10,9 @@
       :on-failed="onFialed"
       ref="appStreamerRef"
     >
-      <div class="dashboard-header"></div>
+      <div class="dashboard-header">
+        <span>Welding Workshop</span>
+      </div>
       <template v-if="state.mqttConnected && !state.streamLoading">
         <DashboardPanel
           :base-panel-data="basePanelData"
@@ -251,12 +253,22 @@ const handleCloseRobotPanel = () => {
 
 .dashboard-header {
   width: 100%;
-  height: 144px;
+  height: 80px;
+  line-height: 54px;
   background-image: url('@/assets/dashboard/factverse-header.png');
-  background-size: 100%;
+  background-size: 1827px 80px;
+  background-position: center 0;
   background-repeat: no-repeat;
   position: absolute;
   top: 0;
   pointer-events: none;
+
+  text-align: center;
+  span {
+    color: #FFFFFF;
+    font-size: 30px;
+    font-weight: 600;
+    padding-left: 15px;
+  }
 }
 </style>
