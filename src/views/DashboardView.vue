@@ -29,21 +29,19 @@
 <script lang="ts" setup>
 import { ElMessage, type MessageParamsWithType } from 'element-plus'
 import { computed, onBeforeUnmount, onMounted, reactive, ref } from 'vue'
-import { DASHBOARD_CONFIG } from '@/config/dashboard.config'
-import type { AppStreamMessageType } from '@/types/appStream'
 import AppStreamer from '@/components/AppStreamer.vue'
-import DashboardPanel from '../components/Panel.vue'
-import { useMqtt } from '@/utils/mqtt'
-import mqtt from 'mqtt'
-import type { BasePanelTy, RobotTy } from '@/types/panel'
 import { useAccountStore } from '@/stores/account'
-
+import type { AppStreamMessageType } from '@/types/appStream'
+import type { BasePanelTy, RobotTy } from '@/types/panel'
+import { APP_CONFIG, useMqtt } from '@/utils/mqtt'
+import mqtt from 'mqtt'
+import DashboardPanel from '../components/Panel.vue'
 const state = ref<{
   streamLoading?: boolean
   streamReady?: boolean
   mqttConnected: boolean
 }>({
-  streamLoading: true,
+  streamLoading: false,
   streamReady: false,
   mqttConnected: false,
 })
@@ -56,46 +54,48 @@ const appStreamerRef = ref<InstanceType<typeof AppStreamer>>()
 // Connection to Omniverse service successful
 const onStarted = () => {
   state.value.streamReady = appStreamerRef.value?.state.streamReady
-
   // Send message to Omniverse server
-  const reset_message: AppStreamMessageType = {
-    event_type: 'openStageRequest',
+  initOVsetup()
+}
+
+// setAdaptorConfigRequest message to Omniverse server
+const initOVsetup = () => {
+  const settings_message: AppStreamMessageType = {
+    event_type: 'setAdaptorConfigRequest',
     payload: {
-      url: DASHBOARD_CONFIG.streamUsd, //Omniverse usd url
+      token: APP_CONFIG.OMNIVERSE.TOKEN,
+      account_id: '',
+      password: '',
+      nucleus_ip: APP_CONFIG.OMNIVERSE.NUCLEUS_IP,
+      server_url: APP_CONFIG.OMNIVERSE.SERVER_URL,
     },
   }
-  appStreamerRef.value?.sendMessage(JSON.stringify(reset_message))
+  appStreamerRef.value?.sendMessage(JSON.stringify(settings_message))
 }
 
 // Connection to Omniverse service failed
 const onFialed = (err: MessageParamsWithType) => {
   state.value.streamLoading = false
   state.value.streamReady = false
-  console.log('Connection to Omniverse service failed. Error:', err)
   ElMessage.error(err)
 }
 
 // Handle custom event from Omniverse server
 const handleCustomEvent = (event: AppStreamMessageType) => {
-  // Initialize FactVerse scene
-  if (event.event_type === 'openedStageResult') {
-    // Initialize FactVerse scene successful
-    if (event.payload.result === 'success') {
-      const joinSession: AppStreamMessageType = {
-        event_type: 'joinSessionRequest',
-        payload: {
-          url: DASHBOARD_CONFIG.streamUsd,
-          session: 'iot_session',
-        },
-      }
-      appStreamerRef.value?.sendMessage(JSON.stringify(joinSession))
-    } else if (event.payload.result === 'error') {
-      ElMessage.error('Initialize FactVerse scene failed')
+  if (event.event_type === 'setAdaptorConfigResponse') {
+    // Open FactVerse scene
+    const open_message: AppStreamMessageType = {
+      event_type: 'openDTSceneRequest',
+      payload: {
+        scene_id: window.DASHBOARD_CONFIG.sceneId,
+        record_id: window.DASHBOARD_CONFIG.simulatedId,
+      },
     }
+    appStreamerRef.value?.sendMessage(JSON.stringify(open_message))
   }
-
-  // Join session
-  if (event.event_type === 'joinSessionResponse') {
+  // Initialize FactVerse scene openedStageResult
+  if (event.event_type === 'openAdaptorResponse') {
+    // Initialize FactVerse scene successful
     if (event.payload.result === 'success') {
       state.value.streamLoading = false
       // Subscribe Panel Data to MQTT topic
@@ -104,7 +104,7 @@ const handleCustomEvent = (event: AppStreamMessageType) => {
         onSubscribe(topics.value.basePanel)
       }
     } else if (event.payload.result === 'error') {
-      ElMessage.error('Join FactVerse session failed')
+      ElMessage.error('Initialize FactVerse scene failed')
     }
   }
 
@@ -122,7 +122,7 @@ const handleCustomEvent = (event: AppStreamMessageType) => {
 const accountStore = useAccountStore()
 const topics = computed(() => {
   return {
-    basePanel: `/DFS/${accountStore.tenant.id}/${DASHBOARD_CONFIG.panelId}`, // Panel topic
+    basePanel: `/DFS/${accountStore.tenant.id}/${window.DASHBOARD_CONFIG.panelId}`, // Panel topic
     robot: `/DFS/${accountStore.tenant.id}/${currentRobotId.value}`, // Robot topic
   }
 })
@@ -135,7 +135,6 @@ const initMqtt = () => {
   if (!mqttClient) return
   mqttClient
     ?.on('connect', () => {
-      console.log('mqtt connected')
       state.value.mqttConnected = true
     })
     .on('error', (err: any) => {
@@ -166,7 +165,6 @@ const onSubscribe = (topic: string) => {
   if (subscribeTopics.includes(topic)) return
   subscribeTopics.push(topic)
   mqttClient?.subscribe(topic, (err: any) => {
-    console.log('subscribe', topic, err)
     if (err) {
       console.error(err)
     }
@@ -265,7 +263,7 @@ const handleCloseRobotPanel = () => {
 
   text-align: center;
   span {
-    color: #FFFFFF;
+    color: #ffffff;
     font-size: 30px;
     font-weight: 600;
     padding-left: 15px;

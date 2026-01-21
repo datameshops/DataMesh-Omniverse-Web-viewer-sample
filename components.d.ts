@@ -8,20 +8,15 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     AppStreamer: typeof import('./src/components/AppStreamer.vue')['default']
-    BasePanel: typeof import('./src/components/BasePanel.vue')['default']
-    Dashboard: typeof import('./src/components/Dashboard.vue')['default']
-    DashboardPanel: typeof import('./src/components/DashboardPanel.vue')['default']
     ElButton: typeof import('element-plus/es')['ElButton']
     ElDescriptions: typeof import('element-plus/es')['ElDescriptions']
     ElDescriptionsItem: typeof import('element-plus/es')['ElDescriptionsItem']
     ElForm: typeof import('element-plus/es')['ElForm']
     ElFormItem: typeof import('element-plus/es')['ElFormItem']
     ElInput: typeof import('element-plus/es')['ElInput']
-    ElRow: typeof import('element-plus/es')['ElRow']
     ElTable: typeof import('element-plus/es')['ElTable']
     ElTableColumn: typeof import('element-plus/es')['ElTableColumn']
     Panel: typeof import('./src/components/Panel.vue')['default']
-    RobotPanel: typeof import('./src/components/dashboard/RobotPanel.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
   }

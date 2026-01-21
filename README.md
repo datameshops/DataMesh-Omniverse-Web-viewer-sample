@@ -12,26 +12,31 @@ This sample is built as a Vue application using the VueJS framework ([https://vu
 
 - Install Node.js and npm.
 - Chromium browser.
-- Install the [Omniverse Nucleus](https://81biz.sharepoint.com/:o:/s/DataMeshDev/EjQ66QdSmNxBn8YBzOoXazABpth5pxqqnSgh0-gPSvpIMw?e=kso5oZ).
-- Install the [USD Viewer Streaming Application](https://81biz.sharepoint.com/:o:/s/DataMeshDev/EjQ66QdSmNxBn8YBzOoXazABpth5pxqqnSgh0-gPSvpIMw?e=kso5oZ).
+- Install the [Omniverse Nucleus](https://docs.omniverse.nvidia.com/nucleus/latest/enterprise/installation/install-ove-nucleus.html).
+- Install the [USD Viewer Streaming Application](https://github.com/NVIDIA-Omniverse/kit-app-template/tree/main/templates/apps/usd_viewer).
 
 ## Service Configuration
 
 Before running this sample application, you need to configure the following:
 
-1. Open the [src/config/dashboard.config.ts](src/config//dashboard.config.ts) configuration file.
+1. Open the [src/typings.d.ts](src/typings.d.ts) to define the global configuration property types.
+You can add additional properties as needed.
 
-2. Find the `streamUsd` variable in `DASHBOARD_CONFIG` and set its value to the USD file address based on the [USD Viewer Streaming Application](https://81biz.sharepoint.com/:o:/s/DataMeshDev/EjQ66QdSmNxBn8YBzOoXazABpth5pxqqnSgh0-gPSvpIMw?e=kso5oZ).
+2. Open the [public/config.js](public/config.js) configuration file. 
+Any newly added properties must correspond to the global configuration property types.
 
-3. Find the `streamServer` variable in `DASHBOARD_CONFIG` and set its value to the service address based on the [USD Viewer Streaming Application](https://81biz.sharepoint.com/:o:/s/DataMeshDev/EjQ66QdSmNxBn8YBzOoXazABpth5pxqqnSgh0-gPSvpIMw?e=kso5oZ).
+3. Locate the `streamServer` variable in `DASHBOARD_CONFIG` and set its value to the service address of the [USD Viewer Streaming Application](https://github.com/NVIDIA-Omniverse/kit-app-template/tree/main/templates/apps/usd_viewer).
 
-4. Find the `sceneId` variable in `PANEL_CONFIG` and set its value to the scene ID based on the DataMesh digital twin platform (refer to the [USD Viewer Streaming Application](https://81biz.sharepoint.com/:o:/s/DataMeshDev/EjQ66QdSmNxBn8YBzOoXazABpth5pxqqnSgh0-gPSvpIMw?e=kso5oZ)).
+4. Locate the `sceneId` variable in `DASHBOARD_CONFIG` and set its value to the scene ID based on the FactVerse platform.
+
+5. Locate the `simulatedId` variable in `DASHBOARD_CONFIG` and set its value to the Record ID obtained from the FactVerse platform.
 
 ```javascript
-export const DASHBOARD_CONFIG = {
-  streamServer: '192.168.19.211',
-  streamUsd: 'omniverse://192.168.19.211/FactVerse/53e0a61bb71a4b1ebaf0055e19406cbf.usd',
-  panelId: 'ba78fc18bb5ed047be1cb3c8fefff049',
+window.DASHBOARD_CONFIG = {
+  streamServer: '192.168.24.150',
+  sceneId: '7ad1228fb9e044528ea0e0c0beebd110',
+  simulatedId:'',
+  panelId: '044cb53f7c76573d0682022fb78e890a',
 }
 ```
 
@@ -125,12 +130,18 @@ Messages sent by `AppStreamer` are JSON strings. To ensure that your custom Kit 
 Example:
 
 ```typescript
-const message = {
-  event_type: 'openStageRequest',
-  payload: {
-    url: `omniverse://127.0.0.1/FactVerse/53e0a61bb71a4b1ebaf0055e19406cbf.usd`, //Omniverse usd url
-  },
-}
+//
+  const settings_message: AppStreamMessageType = {
+    event_type: 'setAdaptorConfigRequest',
+    payload: {
+      token: APP_CONFIG.OMNIVERSE.TOKEN,
+      account_id: '',
+      password: '',
+      nucleus_ip: APP_CONFIG.OMNIVERSE.NUCLEUS_IP,
+      server_url: APP_CONFIG.OMNIVERSE.SERVER_URL,
+    },
+  }
+
 ```
 
 Then, serialize the message object into a JSON string and send it using `AppStreamer.sendMessage()`.
@@ -145,10 +156,75 @@ The [DashboardView.vue](src/views/DashboardView.vue#L55) file in this sample pro
 
 When using `AppStreamer.connect()` to register a custom event handler, you need to provide a function to process incoming messages. This function should receive a message object that contains both `event_type` and `payload`.
 
+
 ```typescript
 const handleCustomEvent (event: any): void {
   // Initialize FactVerse scene
-  if (event.event_type === 'openedStageResult') {
+  if (event.event_type === 'openAdaptorResponse') {
+    // Initialize FactVerse scene successful
+    if (event.payload.result === 'success') {
+      console.log('FactVerse scene initialized successfully')
+    }
+  }
+}
+
+```
+
+#### Execution Order
+When registering custom event handlers using `AppStreamer.connect()`, the initialization process follows this sequence:
+1. Initialize adaptor configuration
+
+	Send a `setAdaptorConfigRequest` to initialize the adaptor configuration.
+	
+	This request can include either an account/password pair or a login token.
+	a) The token can be obtained after configuring TOKEN, NUCLEUS_IP, and SERVER_URL in `src/utils/mqtt.ts`
+	b) Once the configuration is prepared, send the initialization request using `AppStreamer.connect()`.
+	
+2. Handle initialization response
+
+	After sending the request, the client receives a `setAdaptorConfigResponse` event.
+	
+	This event indicates the result of the initialization process.
+	
+	Receiving this response means the adaptor configuration has been successfully applied.
+	
+3. Open the digital twin scene
+
+	After successful initialization, send an `openDTSceneRequest` to open the scene.
+
+	The scene-related parameters (such as sceneId and simulatedId) are configured in [public/config.js](public/config.js) 
+
+	The `openAdaptorResponse` event is used to handle the result of the scene-opening request.
+
+	Receiving this response indicates that the scene has been opened successfully.
+	
+```typescript
+
+
+  const settings_message: AppStreamMessageType = {
+    event_type: 'setAdaptorConfigRequest',
+    payload: {
+      token: APP_CONFIG.OMNIVERSE.TOKEN,
+      account_id: '',
+      password: '',
+      nucleus_ip: APP_CONFIG.OMNIVERSE.NUCLEUS_IP,
+      server_url: APP_CONFIG.OMNIVERSE.SERVER_URL,
+    },
+  }
+const handleCustomEvent (event: any): void {
+    if (event.event_type === 'setAdaptorConfigResponse') {
+    //Open scene using sceneId and simulatedId defined in config.js
+    const open_message: AppStreamMessageType = {
+      event_type: 'openDTSceneRequest',
+      payload: {
+        scene_id: window.DASHBOARD_CONFIG.sceneId,
+        record_id: window.DASHBOARD_CONFIG.simulatedId,
+      },
+    }
+    appStreamerRef.value?.sendMessage(JSON.stringify(open_message))
+  }
+  // Initialize FactVerse scene
+  if (event.event_type === 'openAdaptorResponse') {
     // Initialize FactVerse scene successful
     if (event.payload.result === 'success') {
       console.log('FactVerse scene initialized successfully')

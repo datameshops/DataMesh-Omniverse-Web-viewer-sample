@@ -25,10 +25,9 @@ import {
   type StreamProps,
 } from '@nvidia/omniverse-webrtc-streaming-library'
 import { onMounted, onUpdated, reactive, ref } from 'vue'
-import { DASHBOARD_CONFIG } from '@/config/dashboard.config'
 
 const {
-  server = DASHBOARD_CONFIG.streamServer,
+  server = window.DASHBOARD_CONFIG.streamServer,
   onStarted = () => {},
   onFailed = (error: any) => {
     console.error(error)
