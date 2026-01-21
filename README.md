@@ -6,7 +6,7 @@
 
 This sample is a Web Viewer data visualization application based on the DataMesh digital twin platform and NVIDIA Omniverse. It demonstrates how to use the DataMesh digital twin platform with NVIDIA Omniverse to render digital twin scenes and visualize data in a web client.
 
-This sample is built as a Vue application using the VueJS framework ([https://vuejs.org/](https://vuejs.org/)).
+This sample is built as a Vue application using the VueJS framework ([https://vuejs.org/](https://vuejs.org/)). 
 
 ## Prerequisites
 
