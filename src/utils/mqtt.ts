@@ -1,12 +1,6 @@
-/*
- * @Author: Gao
- * @Date: 2025-02-25 21:39:46
- * @LastEditors: Gao
- * @LastEditTime: 2025-11-11 10:27:41
- * @Description:
- */
+
 import { useAccountStore } from '@/stores/account';
-import mqtt from 'mqtt'; // 仅导入默认导出
+import mqtt from 'mqtt';
 import { v4 as uuidv4 } from 'uuid';
 
 
@@ -33,7 +27,7 @@ export function useMqtt() {
     return client
   }
 }
-// 配置常量
+// Configure constants
 export const APP_CONFIG = {
   OMNIVERSE: {
     NUCLEUS_IP: 'localhost',

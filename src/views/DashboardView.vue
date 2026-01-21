@@ -41,7 +41,7 @@ const state = ref<{
   streamReady?: boolean
   mqttConnected: boolean
 }>({
-  streamLoading: false,
+  streamLoading: true,
   streamReady: false,
   mqttConnected: false,
 })
@@ -157,7 +157,6 @@ const initMqtt = () => {
         break
       default:
     }
-    // console.log(data)
   })
 }
 // Subscribe to a new topic if not already subscribed

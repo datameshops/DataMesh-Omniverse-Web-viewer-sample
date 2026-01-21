@@ -1,3 +1,4 @@
+
 import { requestControl } from '@/utils/request'
 import type { ObjTy } from '@/types'
 
@@ -43,38 +44,6 @@ export function getUserInfoAPI(data: ObjTy) {
   )
 }
 
-// Switch current user API
-export function currentUserSwitchAPI(data: ObjTy) {
-  return requestControl(
-    {
-      url: '/api/v6/auth/switch',
-      method: 'post',
-    },
-    data,
-  )
-}
-
-// Get all tenant list for current user API
-export function getTenantsAPI(data?: ObjTy) {
-  return requestControl(
-    {
-      url: '/api/v6/auth/user/listCurrentUserTenant',
-      method: 'get',
-    },
-    data || {},
-  )
-}
-
-// Check if tenant has SMS authentication enabled API
-export function selectTenantAPI(data: ObjTy) {
-  return requestControl(
-    {
-      url: '/api/v6/auth/selectTenant',
-      method: 'json',
-    },
-    data,
-  )
-}
 
 // Get all tenant information by username API
 export function getTenantsByUsernameAPI(data: ObjTy = {}) {
