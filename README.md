@@ -6,7 +6,7 @@
 
 This sample is a Web Viewer data visualization application based on the DataMesh digital twin platform and NVIDIA Omniverse. It demonstrates how to use the DataMesh digital twin platform with NVIDIA Omniverse to render digital twin scenes and visualize data in a web client.
 
-This sample is built as a Vue application using the VueJS framework ([https://vuejs.org/](https://vuejs.org/)). 
+This sample is built as a Vue application using the VueJS framework ([https://vuejs.org/](https://vuejs.org/)).
 
 ## Prerequisites
 
@@ -138,7 +138,7 @@ Example:
       account_id: '',
       password: '',
       nucleus_ip: APP_CONFIG.OMNIVERSE.NUCLEUS_IP,
-      server_url: APP_CONFIG.OMNIVERSE.SERVER_URL,
+      deploy_code: APP_CONFIG.OMNIVERSE.DEPlOY_CODE
     },
   }
 
@@ -174,30 +174,40 @@ const handleCustomEvent (event: any): void {
 When registering custom event handlers using `AppStreamer.connect()`, the initialization process follows this sequence:
 1. Initialize adaptor configuration
 
-	Send a `setAdaptorConfigRequest` to initialize the adaptor configuration.
-	
-	This request can include either an account/password pair or a login token.
-	a) The token can be obtained after configuring TOKEN, NUCLEUS_IP, and SERVER_URL in `src/utils/mqtt.ts`
-	b) Once the configuration is prepared, send the initialization request using `AppStreamer.connect()`.
-	
+  Send a `setAdaptorConfigRequest` to initialize the adaptor configuration.
+  
+  This request can include either an account/password pair or a login token.
+  a) The token can be obtained after configuring TOKEN, NUCLEUS_IP and DEPLOY_CODE in `src/utils/mqtt.ts`
+    The DEPLOY_CODE = 'cn' value specifies the deployment code used for adaptor login.
+
+    'cn' is the default value and represents the China (Mainland) deployment.
+
+    If you need to access a different deployment, update both the proxy service configuration in vite.config.ts and the DEPLOY_CODE value accordingly:
+
+    Japan deployment code: 'jp'
+
+    Singapore deployment code: 'sg'
+
+  b) Once the configuration is prepared, send the initialization request using `AppStreamer.connect()`.
+        
 2. Handle initialization response
 
-	After sending the request, the client receives a `setAdaptorConfigResponse` event.
-	
-	This event indicates the result of the initialization process.
-	
-	Receiving this response means the adaptor configuration has been successfully applied.
-	
+  After sending the request, the client receives a `setAdaptorConfigResponse` event.
+  
+  This event indicates the result of the initialization process.
+  
+  Receiving this response means the adaptor configuration has been successfully applied.
+  
 3. Open the digital twin scene
 
-	After successful initialization, send an `openDTSceneRequest` to open the scene.
+  After successful initialization, send an `openDTSceneRequest` to open the scene.
 
-	The scene-related parameters (such as sceneId and simulatedId) are configured in [public/config.js](public/config.js) 
+  The scene-related parameters (such as sceneId and simulatedId) are configured in [public/config.js](public/config.js) 
 
-	The `openAdaptorResponse` event is used to handle the result of the scene-opening request.
+  The `openAdaptorResponse` event is used to handle the result of the scene-opening request.
 
-	Receiving this response indicates that the scene has been opened successfully.
-	
+  Receiving this response indicates that the scene has been opened successfully.
+  
 ```typescript
 
 
@@ -208,7 +218,7 @@ When registering custom event handlers using `AppStreamer.connect()`, the initia
       account_id: '',
       password: '',
       nucleus_ip: APP_CONFIG.OMNIVERSE.NUCLEUS_IP,
-      server_url: APP_CONFIG.OMNIVERSE.SERVER_URL,
+      deploy_code: APP_CONFIG.OMNIVERSE.DEPlOY_CODE
     },
   }
 const handleCustomEvent (event: any): void {

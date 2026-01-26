@@ -67,7 +67,7 @@ const initOVsetup = () => {
       account_id: '',
       password: '',
       nucleus_ip: APP_CONFIG.OMNIVERSE.NUCLEUS_IP,
-      server_url: APP_CONFIG.OMNIVERSE.SERVER_URL,
+      deploy_code: APP_CONFIG.OMNIVERSE.DEPlOY_CODE,
     },
   }
   appStreamerRef.value?.sendMessage(JSON.stringify(settings_message))

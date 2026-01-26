@@ -31,8 +31,8 @@ export function useMqtt() {
 export const APP_CONFIG = {
   OMNIVERSE: {
     NUCLEUS_IP: 'localhost',
-    SERVER_URL: voHttps,
     TOKEN:token,
+    DEPlOY_CODE:'cn',
   },
   HEARTBEAT_INTERVAL: 5000,
 } as const
